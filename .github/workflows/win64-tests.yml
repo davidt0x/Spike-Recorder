@@ -13,8 +13,13 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: msys2 {0}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -41,8 +46,7 @@ jobs:
             
       # Runs a single command using the runners shell
       - name: Check SDL config
-        run: echo $PATH
-        #run: sdl2-config --cflags --libs
+        run: sdl2-config --cflags --libs
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
