@@ -35,6 +35,9 @@ jobs:
             cmake
             pkg-config
             mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL2_image
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-hidapi
             
       # Runs a single command using the runners shell
       - name: Check SDL config
