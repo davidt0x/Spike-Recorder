@@ -54,5 +54,9 @@ jobs:
         run: |
           mkdir bass24
           wget http://us.un4seen.com/files/bass24.zip
-          unzip -j bass24.zip c/bass.h c/x64/bass.lib  x64/bass.dll -d bass24          
+          wget http://www.un4seen.com/files/bassalac24.zip
+          wget http://www.un4seen.com/files/z/2/bass_aac24.zip
+          unzip -j bass24.zip c/bass.h c/x64/bass.lib  x64/bass.dll -d bass24
+          unzip -j bassalac24.zip x64/bassalac.dll -d bass24
+          unzip -j bass_aac24.zip x64/bass_aac.dll -d bass24        
           
