@@ -49,14 +49,24 @@ jobs:
       - name: Check SDL config
         run: sdl2-config --cflags --libs
 
-      # Get BASS Audio Library, version 2.4 hardcoded, not ideal
-      - name: Install BASS Audio Library v2.4
-        run: |
-          mkdir bass24
-          wget http://us.un4seen.com/files/bass24.zip
-          wget http://www.un4seen.com/files/bassalac24.zip
-          wget http://www.un4seen.com/files/z/2/bass_aac24.zip
-          unzip -j bass24.zip c/bass.h c/x64/bass.lib  x64/bass.dll -d bass24
-          unzip -j bassalac24.zip x64/bassalac.dll -d bass24
-          unzip -j bass_aac24.zip x64/bass_aac.dll -d bass24        
+#       # Get BASS Audio Library, version 2.4 hardcoded, not ideal
+#       - name: Install BASS Audio Library v2.4
+#         run: |
+#           mkdir bass24
+#           wget http://us.un4seen.com/files/bass24.zip
+#           wget http://www.un4seen.com/files/bassalac24.zip
+#           wget http://www.un4seen.com/files/z/2/bass_aac24.zip
+#           unzip -j bass24.zip c/bass.h c/x64/bass.lib  x64/bass.dll -d bass24
+#           unzip -j bassalac24.zip x64/bassalac.dll -d bass24
+#           unzip -j bass_aac24.zip x64/bass_aac.dll -d bass24        
           
+      # Finally, run cmake and build
+      - name: CMake Generate
+        run: |
+          mkdir build
+          cd build
+          cmake -G "MinGW Makefiles" ..
+
+      - name: CMake Build
+        run: cmake --build . --config Release -- -j 2
+
