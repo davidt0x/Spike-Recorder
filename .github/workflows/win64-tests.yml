@@ -1,0 +1,72 @@
+# This is a basic workflow to help you get started with Actions
+
+name: win64-tests
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: msys2 {0}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-2019
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            git
+            unzip
+            base-devel
+            make
+            cmake
+            pkg-config
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL2_image
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-hidapi
+            
+      # Make sure SDL2 is setup 
+      - name: Check SDL config
+        run: sdl2-config --cflags --libs
+
+#       # Get BASS Audio Library, version 2.4 hardcoded, not ideal
+#       - name: Install BASS Audio Library v2.4
+#         run: |
+#           mkdir bass24
+#           wget http://us.un4seen.com/files/bass24.zip
+#           wget http://www.un4seen.com/files/bassalac24.zip
+#           wget http://www.un4seen.com/files/z/2/bass_aac24.zip
+#           unzip -j bass24.zip c/bass.h c/x64/bass.lib  x64/bass.dll -d bass24
+#           unzip -j bassalac24.zip x64/bassalac.dll -d bass24
+#           unzip -j bass_aac24.zip x64/bass_aac.dll -d bass24        
+          
+      # Finally, run cmake and build
+      - name: CMake Generate
+        run: |
+          mkdir build
+          cd build
+          cmake -G "MinGW Makefiles" ..
+
+      - name: CMake Build
+        run: cmake --build . --config Release -- -j 2
+
