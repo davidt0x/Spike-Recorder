@@ -17,7 +17,7 @@
 #include "AudioInputConfig.h"
 #include "defaults/DefaultConfig.h"
 
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
     #include "FirmwareUpdater.h"
     #include "BYBFirmwareVO.h"
     #include "BSLFirmwareUpdater.h"
@@ -220,7 +220,7 @@ public:
     //check if buffer has loaded data at "pos" position
     bool isBufferLoadedAtPosition(long pos);
 
-    #if defined(_WIN32)
+    #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
         int prepareForHIDFirmwareUpdate(BYBFirmwareVO * firmwareToUpdate);
         int getUSBFirmwareUpdateStage();
         bool shouldStartFirmwareUpdatePresentation;
@@ -364,7 +364,7 @@ private:
 
 	int _firmwareUpdateStage;//this needs to be outside exclusive win block
 
-    #if defined(_WIN32)
+    #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
         FirmwareUpdater _xmlFirmwareUpdater;
         BSLFirmwareUpdater _bslFirmwareUpdater;
         std::list<BYBFirmwareVO> _currentFirmwares;

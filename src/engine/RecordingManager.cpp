@@ -50,7 +50,7 @@ RecordingManager::RecordingManager() : _pos(0), _paused(false), _threshMode(fals
 
     initInputConfigPersistance();
 
-    #if defined(_WIN32)
+    #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
     shouldStartFirmwareUpdatePresentation = false;
     #endif
 	_player.start(_sampleRate);
@@ -293,7 +293,7 @@ void RecordingManager::scanUSBDevices()
 }
 
 
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
 
          std::list<BYBFirmwareVO> RecordingManager::firmwareList()
          {

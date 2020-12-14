@@ -58,7 +58,7 @@
     #include <string>
     #include <locale>
     #include <algorithm>
-    DEFINE_GUID(GUID_DEVCLASS_PORTS, 0x4D36E978, 0xE325, 0x11CE, 0xBF, 0xC1, 0x08, 0x00, 0x2B, 0xE1, 0x03, 0x18);
+    //DEFINE_GUID(GUID_DEVCLASS_PORTS, 0x4D36E978, 0xE325, 0x11CE, 0xBF, 0xC1, 0x08, 0x00, 0x2B, 0xE1, 0x03, 0x18);
 
     #include <windows.h>
     #include "native/SerialPortsScan.h"
@@ -940,7 +940,8 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
             //error_msg = "Unable to write timeout settings to " + name + ", " + buf;
             return -1;
         }
-        return (int)port_handle;
+        //return (int)port_handle;
+	return PtrToInt(port_handle);
 #endif // _WIN32
 
 
@@ -2495,9 +2496,11 @@ const std::string ArduinoSerial::currentDateTime() {
    char            fmt[64], buf[64];
    struct timeval  tv;
    struct tm       *tm;
+   long long 	   tv_sec; 
 
    gettimeofday(&tv, NULL);
-   tm = localtime(&tv.tv_sec);
+   tv_sec = (long long)tv.tv_sec;
+   tm = localtime(&tv_sec);
    strftime(fmt, sizeof fmt, "%Y-%m-%d %H:%M:%S.%%06u", tm);
    snprintf(buf, sizeof buf, fmt, tv.tv_usec);
    return buf;

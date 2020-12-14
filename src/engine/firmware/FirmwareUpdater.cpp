@@ -4,7 +4,9 @@
 #define ADDRESS_TO_COMPAT_XML "https://backyardbrains.com/products/firmwares/sbpro/compatibility.xml"
 #define NEW_FIRMWARE_FILENAME "newfirmware.txt"
 #include "curl/curl.h"
-using namespace tinyxml2;
+
+//using namespace tinyxml2;
+namespace TXML = tinyxml2;
 
 namespace BackyardBrains
 {
@@ -89,17 +91,17 @@ namespace BackyardBrains
         void FirmwareUpdater::LoadXMLFile()
         {
             try{
-                    XMLDocument doc;
-                    if(doc.LoadFile("compatibility.xml")!= XML_NO_ERROR)
+                    TXML::XMLDocument doc;
+                    if(doc.LoadFile("compatibility.xml")!= TXML::XML_NO_ERROR)
                     {
                         logError("Can not load XML file");
                         return;
                     }
-                    XMLElement *rootnode = doc.RootElement();
+                    TXML::XMLElement *rootnode = doc.RootElement();
 
 
                     //Get firmwares node
-                    XMLNode *firmwaresNode  = findChildWithName(rootnode, "firmwares");
+                    TXML::XMLNode *firmwaresNode  = findChildWithName(rootnode, "firmwares");
                     if(firmwaresNode==NULL)
                     {
                         logError("No firmwares in XML. Wrong XML format.");
@@ -108,7 +110,7 @@ namespace BackyardBrains
 
                     //get list of firmwares
                     std::list<BYBFirmwareVO> allFirmwares;
-                    XMLNode *firmwareNode = firmwaresNode ->FirstChild();
+                    TXML::XMLNode *firmwareNode = firmwaresNode ->FirstChild();
                     while(firmwareNode!=NULL)
                     {
                         if( checkNodeName(firmwareNode, "firmware"))
@@ -117,13 +119,13 @@ namespace BackyardBrains
                             //Parse one Firmware node and put into value-object
                             BYBFirmwareVO * newFirmware = new BYBFirmwareVO();
                             //go through all properties of one firmware
-                            XMLNode *tempNode;
+                            TXML::XMLNode *tempNode;
                             if((tempNode = findChildWithName(firmwareNode, "id"))==NULL)
                             {
                                 return;
                             }
 
-                            XMLElement * idNode = tempNode->ToElement();
+                            TXML::XMLElement * idNode = tempNode->ToElement();
 
                             if(idNode)
                             {
@@ -135,7 +137,7 @@ namespace BackyardBrains
                                 return;
                             }
 
-                            XMLElement * versionNode = tempNode->ToElement();
+                            TXML::XMLElement * versionNode = tempNode->ToElement();
                             if(versionNode)
                             {
                                 newFirmware->version = std::string( versionNode->GetText());
@@ -147,7 +149,7 @@ namespace BackyardBrains
                                 return;
                             }
 
-                            XMLElement * descNode = tempNode->ToElement();
+                            TXML::XMLElement * descNode = tempNode->ToElement();
                             if(descNode)
                             {
                                 newFirmware->description =std::string( descNode->GetText());
@@ -159,7 +161,7 @@ namespace BackyardBrains
                                 return;
                             }
 
-                            XMLElement * typeNode = tempNode->ToElement();
+                            TXML::XMLElement * typeNode = tempNode->ToElement();
                             if(typeNode)
                             {
                                 newFirmware->type = std::string(typeNode->GetText());
@@ -171,7 +173,7 @@ namespace BackyardBrains
                                 return;
                             }
 
-                            XMLElement * urlNode = tempNode->ToElement();
+                            TXML::XMLElement * urlNode = tempNode->ToElement();
                             if(urlNode)
                             {
                                 newFirmware->URL = std::string(urlNode->GetText());
@@ -182,7 +184,7 @@ namespace BackyardBrains
                                 return;
                             }
 
-                            XMLElement * hardwareNode = tempNode->ToElement();
+                            TXML::XMLElement * hardwareNode = tempNode->ToElement();
                             if(urlNode)
                             {
                                 newFirmware->hardware = std::string(hardwareNode->GetText());
@@ -209,44 +211,44 @@ namespace BackyardBrains
                     }
 
                 //------- find our version of software
-                    XMLNode *softwareNode  = findChildWithName(rootnode, "software");
+                    TXML::XMLNode *softwareNode  = findChildWithName(rootnode, "software");
                     if(softwareNode==NULL)
                     {
                         logError("No softwareNode in XML. Wrong XML format.");
                         return;
                     }
 
-                    XMLNode *buildNode = softwareNode ->FirstChild();
+                    TXML::XMLNode *buildNode = softwareNode ->FirstChild();
                     while(buildNode!=NULL)
                     {
                         if( checkNodeName(buildNode, "build"))
                         {
-                            XMLNode * tempVersionNode = findChildWithName(buildNode, "version");
+                            TXML::XMLNode * tempVersionNode = findChildWithName(buildNode, "version");
                             if(tempVersionNode==NULL)
                             {
                                 logError("No version of software tag in XML.");
                                 return;
                             }
-                            XMLElement * versionElement  = findChildWithName(buildNode, "version")->ToElement();
+                            TXML::XMLElement * versionElement  = findChildWithName(buildNode, "version")->ToElement();
 
                             if(versionElement)
                             {
                                 if(std::string(versionElement->GetText()).compare(CURRENT_VERSION_STRING)==0)
                                 {
                                     //found our version
-                                    XMLNode * tempFirmwaresNode  = findChildWithName(buildNode, "firmwares");
+                                    TXML::XMLNode * tempFirmwaresNode  = findChildWithName(buildNode, "firmwares");
                                     if(tempFirmwaresNode==NULL)
                                     {
                                         logError("No firmwares for our version of software in XML.");
                                         return;
                                     }
                                     //find all the IDs of the firmwares that are compatibile with our version
-                                    XMLNode *idNode = tempFirmwaresNode ->FirstChild();
+                                    TXML::XMLNode *idNode = tempFirmwaresNode ->FirstChild();
                                     while(idNode!=NULL)
                                     {
                                         if( checkNodeName(idNode, "firmwareid"))
                                         {
-                                            XMLElement * idElement = idNode->ToElement();
+                                            TXML::XMLElement * idElement = idNode->ToElement();
                                             if(idElement)
                                             {
                                                 int idToAdd = atoi(idElement->GetText());
@@ -298,9 +300,9 @@ namespace BackyardBrains
 
 //================================== XML Utility functions ============================
 
-        XMLNode * FirmwareUpdater::findChildWithName(XMLNode * parentNode, const char * name)
+        TXML::XMLNode * FirmwareUpdater::findChildWithName(TXML::XMLNode * parentNode, const char * name)
         {
-            XMLNode *childNode = parentNode ->FirstChild();
+            TXML::XMLNode *childNode = parentNode ->FirstChild();
             while(childNode!=NULL)
             {
                 if( checkNodeName(childNode, name))
@@ -317,7 +319,7 @@ namespace BackyardBrains
             return childNode;
         }
 
-        bool FirmwareUpdater::checkNodeName(XMLNode * node, const char * name)
+        bool FirmwareUpdater::checkNodeName(TXML::XMLNode * node, const char * name)
         {
             if(node == NULL)
             {

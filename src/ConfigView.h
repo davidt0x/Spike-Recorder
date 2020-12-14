@@ -10,7 +10,7 @@
 #include "widgets/HorizontalColorPicker.h"
 #include "widgets/TouchDropDownList.h"
 
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
     #include "BYBFirmwareVO.h"
 #endif
 
@@ -38,7 +38,7 @@ private:
 		void catchPort(int portidx) {
             _parent->serialPortChanged(_virtualDevice, portidx);
         }
-        #if defined(_WIN32)
+        #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
             void catchFirmwareSelection(int firmwareid) {
                 _parent->firmwareSelectionChanged(firmwareid);
             }
@@ -91,7 +91,7 @@ private:
 
     //HID usb connection and firmware update
     //Works only on Windows
-    #if defined(_WIN32)
+    #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
         Widgets::PushButton *_hidButton;
         DropDownList * firmwaresWidget;
         void firmwareSelectionChanged(int firmwareid);

@@ -933,7 +933,7 @@ void MainView::drawTimeLabelsForFile()
 void MainView::paintEvent()
 {
 
-    #if defined(_WIN32)
+    #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
     if(_manager.shouldStartFirmwareUpdatePresentation)
     {
         FirmwareUpdateView *c = new FirmwareUpdateView(_manager, *_audioView);

@@ -738,7 +738,7 @@ void ConfigView::SetupScreen()
         // -------------------- HID device connect (works only under windows)---------------------------------------
 
 
-        #if defined(_WIN32)
+        #if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
 
         //--------------   Update firmware code (works only under Windows)----------------------
 
@@ -929,7 +929,7 @@ void ConfigView::paintEvent() {
 }
 
 
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(_FIRMWARE_UPGRADEABLE)
 
       /*  void ConfigView::hidConnectPressed()
         {
