@@ -4,6 +4,7 @@
 #include <cmath>
 #include <complex>
 #include <vector>
+#include <algorithm>
 
 
 namespace BackyardBrains {

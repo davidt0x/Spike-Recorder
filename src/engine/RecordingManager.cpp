@@ -11,7 +11,6 @@
 
 
 #if defined(_WIN32)
-    #include <unistd.h>
     #include <cmath>
     #include <windows.h>
 #endif

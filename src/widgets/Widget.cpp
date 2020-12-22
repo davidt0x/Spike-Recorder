@@ -21,12 +21,18 @@ Widget::Widget(Widget *parent) : _parentWidget(parent), _layout(NULL) {
 
 Widget::~Widget() {
 	setLayout(NULL);
-	for (WidgetVector::reverse_iterator it = _children.rbegin(); it != _children.rend(); ++it)
-		delete *it;
+	
+	for (WidgetVector::reverse_iterator it = _children.rbegin(); it != _children.rend(); ++it) {
+		if(*it != NULL) {
+			delete * it;
+			*it = NULL;
+		}
+	}
 	if (parentWidget()) {
 		WidgetVector::reverse_iterator it = std::find(parentWidget()->_children.rbegin(), parentWidget()->_children.rend(), this);
 		if (it != parentWidget()->_children.rend())
-			parentWidget()->_children.erase(parentWidget()->_children.begin() + (&(*it) - parentWidget()->_children.data())); // TODO simplify this conversion from reverse_iterator to iterator
+			*it = NULL;
+			//parentWidget()->_children.erase(parentWidget()->_children.begin() + (&(*it) - parentWidget()->_children.data())); // TODO simplify this conversion from reverse_iterator to iterator
 	}
 
 

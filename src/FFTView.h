@@ -29,7 +29,7 @@ private:
 
 	int32_t _fftviewbuffer[FFTBackend::FFTFRES][FFTBackend::FFTTRES];
 
-	int _active;
+	bool _active;
 	int _startTime;
 
 	RecordingManager &_manager;

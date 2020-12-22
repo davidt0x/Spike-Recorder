@@ -26,16 +26,16 @@ typedef enum
 #include <list>
 #include <string>
 #include <iostream>
-#include <sys/time.h>
 #include "constants.h"
+#include <thread>
+
 
 #ifdef _WIN32
 	#include <windows.h>
-	#include "mingw.thread.h"
 #else
 	#include <unistd.h>
-	#include <thread>
-    #include <functional>
+	#include <functional>
+    #include <sys/time.h>
 #endif
 
 namespace BackyardBrains {

@@ -6,10 +6,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(SpikeRecorder)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(HIDAPI REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 
@@ -68,33 +69,47 @@ if (APPLE)
 endif (APPLE)
 
 add_executable(SpikeRecorder ${SOURCES})
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static HIDAPI OpenGL::GL BASS)
+target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS)
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 
 if (WIN32)
-	target_compile_definitions(SpikeRecorder PUBLIC -D_USE_MATH_DEFINES)
+  target_compile_definitions(SpikeRecorder PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX)
+
+  #--------------------------------------------------------------------
+    # Hide the console window in visual studio projects
+    #--------------------------------------------------------------------
+  if(MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+  endif()
+
+  #--------------------------------------------------------------------
+  # Hide the console window in visual studio projects - Release
+  #--------------------------------------------------------------------
+  if(MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+  endif()
 endif (WIN32)
 
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 
 add_definitions(-DSDL_MAIN_HANDLED)
 
 # We need to copy data/ to the build directory too
-add_custom_target(copy_data
+add_custom_command(TARGET SpikeRecorder POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
     ${CMAKE_CURRENT_LIST_DIR}/data
-    ${CMAKE_CURRENT_BINARY_DIR}/data
+    $<TARGET_FILE_DIR:SpikeRecorder>/data
 )
-add_dependencies(SpikeRecorder copy_data)
 
 # Post build commands to copy BASS runtime libraries and data
 
 # Add a post build command to copy bass runtime libs
-add_custom_command(TARGET SpikeRecorder POST_BUILD 
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-  "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass.dll" 
-  "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass_aac.dll" 
-  "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bassalac.dll" 
-  $<TARGET_FILE_DIR:SpikeRecorder>)
-
+if (WIN32)
+  add_custom_command(TARGET SpikeRecorder POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass.dll" 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass_aac.dll" 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bassalac.dll" 
+    $<TARGET_FILE_DIR:SpikeRecorder>)
+endif()

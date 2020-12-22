@@ -9,9 +9,10 @@
 #include "ArduinoSerial.h"
 #include <sys/types.h>
 #include "Log.h"
-#include <unistd.h>
 #include <sstream>
+#include <iostream>
 #include <stdint.h>
+#include <time.h>
 #include "RecordingManager.h"
 
 #define NUMBER_OF_TIMES_TO_SCAN_UNKNOWN_PORT 10
@@ -58,8 +59,10 @@
     #include <string>
     #include <locale>
     #include <algorithm>
+    #include <stdio.h>
     //DEFINE_GUID(GUID_DEVCLASS_PORTS, 0x4D36E978, 0xE325, 0x11CE, 0xBF, 0xC1, 0x08, 0x00, 0x2B, 0xE1, 0x03, 0x18);
 
+    #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
     #include "native/SerialPortsScan.h"
     #define win32_err(s) FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, \
@@ -67,6 +70,12 @@
     #define QUERYDOSDEVICE_BUFFER_SIZE 262144
     typedef unsigned int uint;
     #include <cstdio>
+
+    #if defined(_MSC_VER)
+    #include <BaseTsd.h>
+        typedef SSIZE_T ssize_t;
+    #endif
+
 #endif
 
 
@@ -2492,18 +2501,16 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
     }
 
 
-const std::string ArduinoSerial::currentDateTime() {
-   char            fmt[64], buf[64];
-   struct timeval  tv;
-   struct tm       *tm;
-   long long 	   tv_sec; 
+    const std::string ArduinoSerial::currentDateTime() {
+        time_t     now = time(0);
+        struct tm  tstruct;
+        char       buf[80];
+        tstruct = *localtime(&now);
+        // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+        // for more information about date/time format
+        strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
-   gettimeofday(&tv, NULL);
-   tv_sec = (long long)tv.tv_sec;
-   tm = localtime(&tv_sec);
-   strftime(fmt, sizeof fmt, "%Y-%m-%d %H:%M:%S.%%06u", tm);
-   snprintf(buf, sizeof buf, fmt, tv.tv_usec);
-   return buf;
-}
+        return buf;
+    }
 
 }

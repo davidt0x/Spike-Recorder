@@ -38,7 +38,7 @@ void ConfigView::SetupScreen()
     weAreOnTouchScreen = Widgets::Application::getInstance()->areWeOnTouchscreen();
 
 
-        Log::msg("Create close button...");
+    Log::msg("Create close button...");
 	Widgets::PushButton *closeButton = new Widgets::PushButton(this);
 	closeButton->clicked.connect(this, &ConfigView::closePressed);
 	closeButton->setNormalTex(Widgets::TextureGL::get("data/configcrossed.bmp"));

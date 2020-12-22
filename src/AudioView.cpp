@@ -543,7 +543,8 @@ void AudioView::drawAudio() {
 
                }
 
-				int16_t tempData[samples];
+				//std::vector<int16_t> tempData(samples);
+				int16_t *tempData = new int16_t[samples];
 				std::vector< std::pair<int16_t, int16_t> > tempVectorData(samples);
 				_manager.getData(_channels[i].virtualDevice, pos, samples, tempData);
 				for(int ind = 0;ind<samples;ind++)
@@ -552,6 +553,7 @@ void AudioView::drawAudio() {
 					tempVectorData[ind].second = tempData[ind];
 				}
 				data = tempVectorData;
+				delete[] tempData;
 			}
 			else
 			{

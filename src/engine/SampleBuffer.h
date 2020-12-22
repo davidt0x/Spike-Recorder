@@ -6,6 +6,8 @@
 #include <cassert>
 #include <stdint.h>
 #include <iostream>
+#include <algorithm>
+
 //==============================================================================
 // - This class has circular buffer "_buffer" with raw data for one channel
 //   and 21 (SIZE_LOG2) envelopes

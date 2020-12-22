@@ -36,11 +36,7 @@
 #endif
 
 
-#ifdef _WIN32
-    #include "mingw.thread.h"
-#else
-    #include <thread>
-#endif
+#include <thread>
 
 namespace BackyardBrains {
 
