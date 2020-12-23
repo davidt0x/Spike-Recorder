@@ -827,6 +827,8 @@ void RecordingManager::initRecordingDevices() {
 		// do not add virtualDevices for devices that are not enabled.
 		if(!(info.flags & BASS_DEVICE_ENABLED))
 			continue;
+        if (!((info.flags & BASS_DEVICE_TYPE_MASK) == BASS_DEVICE_TYPE_MICROPHONE))
+            continue;
 		for (int j = 0; j < 2; j++)	{
 			virtualDevice.device = i;
 			virtualDevice.channel = j;
