@@ -76,6 +76,8 @@ target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 if (WIN32)
   target_compile_definitions(SpikeRecorder PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX)
 
+  target_link_libraries(SpikeRecroder "setupapi.lib")
+
   #--------------------------------------------------------------------
     # Hide the console window in visual studio projects
     #--------------------------------------------------------------------
