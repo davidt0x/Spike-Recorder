@@ -58,7 +58,6 @@ list(FILTER SOURCES EXCLUDE REGEX "FirmwareUpdateView.cpp")
 # Add OS specific code
 if (WIN32)
 	list(APPEND SOURCES "src/native/PathsWin.cpp" "src/widgets/native/FileDialogWin.cpp" "src/defaults/DefaultConfig.cpp")	
-	list(APPEND LIBS "setupapi.lib")
 endif (WIN32)
 
 if (UNIX)
@@ -71,7 +70,7 @@ endif (APPLE)
 
 
 add_executable(SpikeRecorder ${SOURCES})
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS ${LIBS})
+target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS)
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 
