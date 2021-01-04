@@ -12,6 +12,7 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
+            vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
 #         
 #         os: [windows-latest, ubuntu-latest, macos-latest]
 #         include:
