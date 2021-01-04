@@ -63,7 +63,7 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
       
       - name: Run CMake with vcpkg.json manifest
-        run: cmake "-GNinja Multi-Config" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet}} -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake
+        run: cmake "-GNinja Multi-Config" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet}} -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
         shell: bash
         
 #       - uses: lukka/run-cmake@main
