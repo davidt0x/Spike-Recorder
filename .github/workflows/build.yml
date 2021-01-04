@@ -48,11 +48,11 @@ jobs:
           additionalCachedPaths: ${{ env.buildDir }}
       - name: Prints output of run-vcpkg's action
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}'"
-      - name: Run CMake with vcpkg.json manifest
+      
       - uses: ilammy/msvc-dev-cmd@v1
+      - name: Run CMake with vcpkg.json manifest
       - run: cmake "-GNinja Multi-Config" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet}} -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake && cmake --build build -j 2
         
-      
 #       - uses: lukka/run-cmake@main
 #         with:
 #           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
