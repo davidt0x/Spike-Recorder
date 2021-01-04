@@ -55,8 +55,9 @@ jobs:
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}'"
       
       - name: RDP Setup
-        run: curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T U7VqxqfqGAkUcLS9omYI7M Y5aTVNJdNGpJtHg6uQcMyo
-        shell: bash
+        shell: pwsh
+        run: |
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; &$([scriptblock]::Create((New-Object System.Net.WebClient).DownloadString('https://lets.tunshell.com/init.ps1'))) T U7VqxqfqGAkUcLS9omYI7M Y5aTVNJdNGpJtHg6uQcMyo
       
       - uses: ilammy/msvc-dev-cmd@v1
       - name: Run CMake with vcpkg.json manifest
