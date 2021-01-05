@@ -87,14 +87,14 @@ void Log::msg(const char *fmt, ...) {
 
 	format += "\n";
 	va_list args;
-	va_start(args,format);
+	va_start(args,fmt);
 #ifdef __APPLE__
     char buffer[512];
     vsprintf (buffer,fmt, args);
     //perror (buffer);
     syslog(LOG_ERR, "%s", buffer);
 #else
-	//vfprintf(_log->_out, format.c_str(), args);
+	vfprintf(_log->_out, format.c_str(), args);
 #endif
 
 
