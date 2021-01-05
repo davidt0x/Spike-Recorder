@@ -70,7 +70,7 @@ endif (APPLE)
 
 
 add_executable(SpikeRecorder ${SOURCES})
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS)
+target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS setupapi.lib)
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 
