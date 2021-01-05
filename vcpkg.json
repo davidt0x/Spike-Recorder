@@ -6,7 +6,7 @@
   "description": "A fork of the Backyard Brains Spike Recorder GUI software that is controllable from a Python process.",
   "dependencies": [
     "sdl2",
-    "sdl2-image"
+    "sdl2-image",
     "hidapi"
   ]
 }
