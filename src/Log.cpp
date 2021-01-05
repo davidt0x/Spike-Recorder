@@ -94,7 +94,7 @@ void Log::msg(const char *fmt, ...) {
     //perror (buffer);
     syslog(LOG_ERR, "%s", buffer);
 #else
-	vfprintf(_log->_out, format.c_str(), args);
+	//vfprintf(_log->_out, format.c_str(), args);
 #endif
 
 
