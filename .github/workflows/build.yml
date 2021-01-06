@@ -8,14 +8,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
             triplet: x64-windows
-#           - os: ubuntu-latest
-#             triplet: x64-linux
-#           - os: macos-latest
-#             triplet: x64-osx
+          - os: ubuntu-latest
+            triplet: x64-linux
+          - os: macos-latest
+            triplet: x64-osx
     env:
       # Indicates the CMake build directory where project files and binaries are being produced.
       CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir/
@@ -48,12 +48,6 @@ jobs:
             
       # On Windows runners, let's ensure to have the Developer Command Prompt environment setup correctly. As used here the Developer Command Prompt created is targeting x64 and using the default the Windows SDK.
       - uses: ilammy/msvc-dev-cmd@v1
-     
-#       - name: Start SSH session
-#         uses: luchihoratiu/debug-via-ssh@main
-#         with:
-#           NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-#           SSH_PASS: ${{ secrets.SSH_PASS }}
      
       # Run CMake to generate Ninja project files, using the vcpkg's toolchain file to resolve and install the dependencies as specified in vcpkg.json.
       - name: Install dependencies and generate project files
