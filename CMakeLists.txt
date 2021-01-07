@@ -8,7 +8,7 @@ project(SpikeRecorder)
 
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-find_package(HIDAPI REQUIRED)
+find_package(hidapi REQUIRED COMPONENTS libusb)
 find_package(SDL2 REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
@@ -28,7 +28,7 @@ endfunction(download_file)
 # We need three packages for BASS, the main library and two plugins for AAC
 # and ALAC formats. Can't figure out a nice cross platform way to do this
 # so we need to hard code downloads of the libraries.
-file(MAKE_DIRECTORY support/bass)
+file(MAKE_DIRECTORY bass)
 if (WIN32)
   download_file(http://us.un4seen.com/files/bass24.zip bass/bass24.zip)
   download_file(http://www.un4seen.com/files/bassalac24.zip bass/bassalac24.zip)
@@ -40,11 +40,17 @@ if (WIN32)
   set_target_properties(BASS PROPERTIES IMPORTED_LOCATION bass/c/x64/bass.lib)
   set_target_properties(BASS PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/bass/c")
 elseif (APPLE)
-  download_file(http://us.un4seen.com/files/bass24-osx.zip support/bass/bass24-osx.zip)
+  download_file(http://us.un4seen.com/files/bass24-osx.zip bass/bass24-osx.zip)
 elseif (UNIX)
-  download_file(http://us.un4seen.com/files/bass24-linux.zip support/bass/bass24-linux.zip)
-  download_file(http://www.un4seen.com/files/bassalac24-linux.zip support/bass/bassalac24-linux.zip)
-  download_file(http://www.un4seen.com/files/z/2/bass_aac24-linux.zip support/bass/bass_aac24-linux.zip)
+  download_file(http://us.un4seen.com/files/bass24-linux.zip bass/bass24.zip)
+  download_file(http://www.un4seen.com/files/bassalac24-linux.zip bass/bassalac24.zip)
+  download_file(http://www.un4seen.com/files/z/2/bass_aac24-linux.zip bass/bass_aac24.zip)
+  file(ARCHIVE_EXTRACT INPUT bass/bass24.zip DESTINATION bass PATTERNS bass.h x64/libbass.so) 
+  file(ARCHIVE_EXTRACT INPUT bass/bassalac24.zip DESTINATION bass PATTERNS x64/libbassalac.so) 
+  file(ARCHIVE_EXTRACT INPUT bass/bass_aac24.zip DESTINATION bass PATTERNS x64/libbass_aac.so) 
+  add_library(BASS SHARED IMPORTED)
+  set_target_properties(BASS PROPERTIES IMPORTED_LOCATION bass/x64/libbass.so)
+  set_target_properties(BASS PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/bass/")
 endif()
 
 # General include directories for the project
@@ -61,16 +67,15 @@ if (WIN32)
 endif (WIN32)
 
 if (UNIX)
-	list(APPEND SOURCES "src/native/PathsLinux.cpp" "src/widgets/native/FileDialogLinux.cpp" "src/defaults/DefaultConfig.cpp")
+	list(APPEND SOURCES "src/native/PathsLinux.cpp" "src/widgets/native/FileDialogLinux.cpp")
 endif (UNIX)
 
 if (APPLE)
-	list(APPEND SOURCES "src/native/PathsMac.cpp" "src/widgets/native/FileDialogMac.cpp" "src/default/sDefaultConfig.cpp")
+	list(APPEND SOURCES "src/native/PathsMac.cpp" "src/widgets/native/FileDialogMac.cpp" "src/default/DefaultConfig.cpp")
 endif (APPLE)
 
-
 add_executable(SpikeRecorder ${SOURCES})
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image ${HIDAPI_LIBRARIES} OpenGL::GL BASS setupapi.lib)
+target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image hidapi::libusb OpenGL::GL BASS)
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 
@@ -112,5 +117,13 @@ if (WIN32)
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass.dll" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass_aac.dll" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bassalac.dll" 
+    $<TARGET_FILE_DIR:SpikeRecorder>)
+endif()
+if (UNIX)
+  add_custom_command(TARGET SpikeRecorder POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbass.so" 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbass_aac.so" 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbassalac.so" 
     $<TARGET_FILE_DIR:SpikeRecorder>)
 endif()
