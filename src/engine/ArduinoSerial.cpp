@@ -42,7 +42,7 @@
     #include <sys/ioctl.h>
     #include <errno.h>
     #include <paths.h>
-    #include <SerialPortsScan.h>
+    #include "native/SerialPortsScan.h"
     #include <termios.h>
     #include <sysexits.h>
     #include <sys/param.h>
