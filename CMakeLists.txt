@@ -76,7 +76,14 @@ if (UNIX)
 endif (UNIX)
 
 if (APPLE)
-	list(APPEND SOURCES "src/native/PathsMac.cpp" "src/widgets/native/FileDialogMac.cpp" "src/defaults/DefaultConfig.cpp" "src/native/KeyboardGeneratorMac.cpp")
+	list(APPEND SOURCES 
+		"src/native/PathsMac.cpp" 
+		"src/native/KeyboardGeneratorMac.cpp"
+		"src/native/SerialPortsScanMac.cpp"
+		"src/widgets/native/FileDialogMac.cpp" 
+		"src/widgets/native/FileDialogMac.mm" 
+		"src/defaults/DefaultConfig.cpp" 
+		)
 endif (APPLE)
 
 add_executable(SpikeRecorder ${SOURCES})
