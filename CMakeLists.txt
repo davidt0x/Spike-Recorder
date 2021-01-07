@@ -119,7 +119,7 @@ add_definitions(-DSDL_MAIN_HANDLED)
 add_custom_command(TARGET SpikeRecorder POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
     ${CMAKE_CURRENT_LIST_DIR}/data
-    $<TARGET_FILE_DIR:SpikeRecorder>/data
+    $<TARGET_FILE_DIR:SpikeRecorder>/spike-recorder/data
 )
 
 # Post build commands to copy BASS runtime libraries and data
@@ -128,22 +128,25 @@ add_custom_command(TARGET SpikeRecorder POST_BUILD
 if (WIN32)
   add_custom_command(TARGET SpikeRecorder POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    $<TARGET_FILE:SpikeRecorder>
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass.dll" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bass_aac.dll" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bassalac.dll" 
-    $<TARGET_FILE_DIR:SpikeRecorder>)
+    $<TARGET_FILE_DIR:SpikeRecorder>/spike-recorder)
 endif()
 if (LINUX)
   add_custom_command(TARGET SpikeRecorder POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    $<TARGET_FILE:SpikeRecorder>
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbass.so" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbass_aac.so" 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbassalac.so" 
-    $<TARGET_FILE_DIR:SpikeRecorder>)
+    $<TARGET_FILE_DIR:SpikeRecorder>/spike-recorder)
 endif()
 if (APPLE)
   add_custom_command(TARGET SpikeRecorder POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    $<TARGET_FILE:SpikeRecorder>
     "${CMAKE_CURRENT_BINARY_DIR}/bass/libbass.dylib" 
-    $<TARGET_FILE_DIR:SpikeRecorder>)
+    $<TARGET_FILE_DIR:SpikeRecorder>/spike=recorder)
 endif()
