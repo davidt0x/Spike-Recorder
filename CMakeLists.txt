@@ -8,7 +8,7 @@ project(SpikeRecorder)
 
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-find_package(hidapi REQUIRED COMPONENTS libusb)
+find_package(hidapi)
 find_package(SDL2 REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
@@ -63,7 +63,8 @@ list(FILTER SOURCES EXCLUDE REGEX "FirmwareUpdateView.cpp")
 
 # Add OS specific code
 if (WIN32)
-	list(APPEND SOURCES "src/native/PathsWin.cpp" "src/widgets/native/FileDialogWin.cpp" "src/defaults/DefaultConfig.cpp")	
+	list(APPEND SOURCES "src/native/PathsWin.cpp" "src/widgets/native/FileDialogWin.cpp" "src/defaults/DefaultConfig.cpp")
+	list(APPEND PLATFORM_LIBS "setupapi.lib")
 endif (WIN32)
 
 if (UNIX)
@@ -75,7 +76,7 @@ if (APPLE)
 endif (APPLE)
 
 add_executable(SpikeRecorder ${SOURCES})
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image hidapi::libusb OpenGL::GL BASS)
+target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image hidapi::hidapi OpenGL::GL BASS ${PLATFORM_LIBS})
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO)
 
@@ -96,8 +97,6 @@ if (WIN32)
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
   endif()
 endif (WIN32)
-
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 
 add_definitions(-DSDL_MAIN_HANDLED)
 
