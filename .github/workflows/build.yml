@@ -31,7 +31,17 @@ jobs:
 
       # Setup the build agent machine with the most recent versions of CMake and Ninja. Both are cached if not already: on subsequent runs both will be quickly restored from GitHub cache service.
       - uses: lukka/get-cmake@latest
-       
+      
+      # Install OS specific dependencies for some of our dependencies.
+      # Currently, this is libusb on linux for hidapi.
+      - name:  Install OS specific dependencies
+        run:   |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            apt-get -y install libudev-dev libusb-1.0-0-dev libfox-1.6-dev
+            apt-get -y install autotools-dev autoconf automake libtool
+          fi
+        shell: bash  
+     
 #       # Restore both vcpkg and its artifacts from the GitHub cache service.
 #       - name: Restore vcpkg and its artifacts.
 #         uses: actions/cache@v2
