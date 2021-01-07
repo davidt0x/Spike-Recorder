@@ -141,3 +141,9 @@ if (LINUX)
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbassalac.so" 
     $<TARGET_FILE_DIR:SpikeRecorder>)
 endif()
+if (APPLE)
+  add_custom_command(TARGET SpikeRecorder POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+    "${CMAKE_CURRENT_BINARY_DIR}/bass/libbass.dylib" 
+    $<TARGET_FILE_DIR:SpikeRecorder>)
+endif()
