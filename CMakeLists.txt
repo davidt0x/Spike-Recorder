@@ -6,6 +6,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(SpikeRecorder)
 
+if(UNIX AND NOT APPLE)
+	set(LINUX TRUE)
+endif()
+
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(hidapi)
