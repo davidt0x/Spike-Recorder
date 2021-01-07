@@ -45,7 +45,7 @@ elseif (APPLE)
   add_library(BASS SHARED IMPORTED)
   set_target_properties(BASS PROPERTIES IMPORTED_LOCATION bass/libbass.dylib)
   set_target_properties(BASS PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/bass/")
-elseif (UNIX)
+elseif (LINUX)
   download_file(http://us.un4seen.com/files/bass24-linux.zip bass/bass24.zip)
   download_file(http://www.un4seen.com/files/bassalac24-linux.zip bass/bassalac24.zip)
   download_file(http://www.un4seen.com/files/z/2/bass_aac24-linux.zip bass/bass_aac24.zip)
@@ -71,9 +71,9 @@ if (WIN32)
 	list(APPEND PLATFORM_LIBS "setupapi.lib")
 endif (WIN32)
 
-if (UNIX)
+if (LINUX)
 	list(APPEND SOURCES "src/native/PathsLinux.cpp" "src/widgets/native/FileDialogLinux.cpp")
-endif (UNIX)
+endif (LINUX)
 
 if (APPLE)
 	list(APPEND SOURCES 
@@ -129,7 +129,7 @@ if (WIN32)
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/bassalac.dll" 
     $<TARGET_FILE_DIR:SpikeRecorder>)
 endif()
-if (UNIX)
+if (LINUX)
   add_custom_command(TARGET SpikeRecorder POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
     "${CMAKE_CURRENT_BINARY_DIR}/bass/x64/libbass.so" 
