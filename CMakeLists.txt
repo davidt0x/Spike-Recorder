@@ -148,5 +148,5 @@ if (APPLE)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
     $<TARGET_FILE:SpikeRecorder>
     "${CMAKE_CURRENT_BINARY_DIR}/bass/libbass.dylib" 
-    $<TARGET_FILE_DIR:SpikeRecorder>/spike=recorder)
+    $<TARGET_FILE_DIR:SpikeRecorder>/spike-recorder)
 endif()
