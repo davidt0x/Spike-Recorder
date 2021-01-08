@@ -27,3 +27,5 @@ xcuserdata
 
 build/
 build2/
+
+CMakeFiles/
