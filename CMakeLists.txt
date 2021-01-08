@@ -16,6 +16,7 @@ find_package(hidapi)
 find_package(SDL2 REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(cppzmq REQUIRED)
 find_package(BASS REQUIRED)
 
 # General include directories for the project
@@ -53,7 +54,14 @@ endif ()
 
 add_executable(SpikeRecorder ${SOURCES})
 
-target_link_libraries(SpikeRecorder PUBLIC SDL2::SDL2-static SDL2::SDL2_image hidapi::hidapi OpenGL::GL BASS ${PLATFORM_LIBS})
+target_link_libraries(SpikeRecorder PUBLIC 
+	SDL2::SDL2-static
+	SDL2::SDL2_image 
+	hidapi::hidapi 
+	OpenGL::GL 
+	BASS
+	cppzmq
+	${PLATFORM_LIBS})
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO -DSDL_MAIN_HANDLED)
 
