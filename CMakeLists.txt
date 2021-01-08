@@ -99,18 +99,14 @@ if (WIN32)
   target_compile_definitions(SpikeRecorder PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX)
 
   #--------------------------------------------------------------------
-    # Hide the console window in visual studio projects
-    #--------------------------------------------------------------------
-  if(MSVC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-  endif()
-
+  # Hide the console window in visual studio projects
+  #--------------------------------------------------------------------
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+  
   #--------------------------------------------------------------------
   # Hide the console window in visual studio projects - Release
   #--------------------------------------------------------------------
-  if(MSVC)
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-  endif()
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif (WIN32)
 
 add_definitions(-DSDL_MAIN_HANDLED)
