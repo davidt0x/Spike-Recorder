@@ -42,7 +42,7 @@ namespace BackyardBrains {
         if (res)
         {
             std::string message = request.to_string();
-            BackyardBrains::Log::msg("ControlSever: Message Received %s", message);
+            BackyardBrains::Log::msg("ControlSever: Message Received %s", message.c_str());
 
             //  Send reply back to client
             zmq::message_t reply(3);
