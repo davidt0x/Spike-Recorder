@@ -5,6 +5,8 @@
 #include <ctime>
 #include "engine/ArduinoSerial.h"
 #include "widgets/BoxLayout.h"
+#include "ControlServer.h"
+
 namespace BackyardBrains {
 
 class RecordingManager;
@@ -77,6 +79,8 @@ private:
 	AnalysisView *_anaView;
 	FFTView *_fftView;
 
+	ControlServer _server;
+
 	void keyPressEvent(Widgets::KeyboardEvent *e);
 
 	/* slots: */
@@ -106,6 +110,9 @@ private:
 
     void connectToFirstShieldOfType(ArduinoSerial::SerialDevice deviceType);
     void connectToShieldForButton(Widgets::PushButton* buttonInst);
+
+	void advance();
+
 };
 
 }

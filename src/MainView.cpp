@@ -36,7 +36,7 @@
 namespace BackyardBrains {
 
 
-MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder &fileRec, Widget *parent) : Widget(parent), _manager(mngr), _anaman(anaman), _fileRec(fileRec), _anaView(NULL) {
+MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder &fileRec, Widget *parent) : Widget(parent), _manager(mngr), _anaman(anaman), _fileRec(fileRec), _anaView(NULL), _server() {
 	_audioView = new AudioView(this, _manager, _anaman);
 
 	    //setup timer that will periodicaly check for USB HID devices
@@ -209,10 +209,16 @@ MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder
 
 	_audioView->standardSettings();
 
+    // Start the command server listening
+    _server.start();
+
 }
 
 MainView::~MainView() {
 	delete _anaView;
+
+    // Shutdown the server
+    _server.stop();
 }
 
 void MainView::triggerEvent()
@@ -1735,6 +1741,36 @@ void MainView::keyPressEvent(Widgets::KeyboardEvent *e) {
 
             }
         }
+    }
+
+}
+
+
+void MainView::advance()
+
+{
+
+    // Check if we have any command messages from a client
+    std::string command = _server.getMessage();
+
+    if (command == "start")
+    {
+        if (!_fileRec.recording())
+            recordPressed();
+
+    }
+    else if (command == "stop") {
+        
+        if (_fileRec.recording())
+            recordPressed();
+    
+    }
+    else if (command == "shutdown") {
+
+    }
+    else if (command != "")
+    {
+        _manager.addMarker(command, _audioView->offset());
     }
 
 }
