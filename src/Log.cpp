@@ -58,7 +58,7 @@ Log::Log() {
 	if(getLoggingPath() == "") {
 		_out = stdout;
 	} else {
-	    fprintf(stderr,getLoggingPath().c_str());
+	    fprintf(stderr, "%s", getLoggingPath().c_str());
 		_out = fopen(getLoggingPath().c_str(), "w");
 		if(_out == 0) {
 			fprintf(stderr, "Error opening logging destination:%s\nRedirecting log to stdout.\n", strerror(errno));
@@ -97,8 +97,6 @@ void Log::msg(const char *fmt, ...) {
 	vfprintf(_log->_out, format.c_str(), args);
 #endif
 
-
-
 	va_end(args);
 }
 
@@ -122,7 +120,7 @@ void Log::warn(const char *fmt, ...) {
 }
 
 void Log::error(const char *fmt, ...) {
-	init();
+  init();
 
 	std::string format = "Error: ";
 	format += fmt;
@@ -140,7 +138,7 @@ void Log::error(const char *fmt, ...) {
 }
 
 void Log::fatal(const char *fmt, ...) {
-	init();
+  init();
 
 	std::string format = "FATAL: ";
 	format += fmt;

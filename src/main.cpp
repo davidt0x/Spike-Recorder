@@ -35,9 +35,6 @@ int main(int argc, char *argv[]) {
 	int ret;
 	ret = chdir(path.c_str());
 
-#ifdef __APPLE__
-	ret += chdir("../Resources");
-#endif
 	if(ret != 0)
 		BackyardBrains::Log::fatal("could not change directory: %s", strerror(errno));
 
