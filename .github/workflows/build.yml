@@ -37,6 +37,7 @@ jobs:
       - name:  Install OS specific dependencies
         run:   |
           if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt update
             sudo apt-get -y install libudev-dev libusb-1.0-0-dev libfox-1.6-dev
             sudo apt-get -y install autotools-dev autoconf automake libtool
           fi
