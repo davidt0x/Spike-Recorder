@@ -1766,6 +1766,11 @@ void MainView::advance()
     
     }
     else if (command == "shutdown") {
+        
+        // Push a quit event, the Application class handles this event to cause shutdown
+        SDL_Event sdlevent;
+        sdlevent.type = SDL_QUIT;
+        SDL_PushEvent(&sdlevent);
 
     }
     else if (command != "")
