@@ -61,11 +61,7 @@ RecordingManager::RecordingManager() : _pos(0), _paused(false), _threshMode(fals
     _arduinoSerial.getAllPortsList();
 
     std::list<std::string>::iterator list_it;
-    for(list_it = _arduinoSerial.list.begin(); list_it!= _arduinoSerial.list.end(); list_it++)
-    {
-            std::cout<<list_it->c_str()<<"\n";
-    }
-
+  
     alphaFeedbackActive = false;
     alphaWavePower = 0;
 

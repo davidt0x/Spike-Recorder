@@ -2,6 +2,8 @@
 #include <SDL_image.h>
 #include <SDL_opengl.h>
 #include <cstring>
+#include "Log.h"
+
 #if defined(_WIN32)
     #include <stdio.h>
     #include <cstdlib>
@@ -23,7 +25,7 @@ GLuint LoadTexture(const char *filename)
 		// Check that the image dimensions are a power of 2
 		if (((surface->w & (surface->w - 1)) != 0) ||
 			((surface->h & (surface->h - 1)) != 0))
-			fprintf(stderr, "Warning: width of '%s' is not a power of 2\n", filename);
+			Log::warn("Warning: width of '%s' is not a power of 2\n", filename);
 
 
 		GLint bytespp = surface->format->BytesPerPixel;
@@ -41,7 +43,7 @@ GLuint LoadTexture(const char *filename)
 			else
 				texture_format = GL_BGR;
 		} else {
-			fprintf(stderr, "Fatal: '%s' is not truecolor.\n", filename);
+			Log::error("Fatal: '%s' is not truecolor.\n", filename);
 			exit(1);
 		}
 
@@ -60,7 +62,7 @@ GLuint LoadTexture(const char *filename)
 	}
 	else
 	{
-		fprintf(stderr, "SDL could not load \"%s\": %s\n", filename, SDL_GetError());
+		Log::error("SDL could not load \"%s\": %s\n", filename, SDL_GetError());
 		return -1;
 	}
 
