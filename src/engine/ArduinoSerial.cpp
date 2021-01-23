@@ -425,11 +425,11 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         memset(buffer, 0, QUERYDOSDEVICE_BUFFER_SIZE);
         ret = QueryDosDeviceA(NULL, buffer, QUERYDOSDEVICE_BUFFER_SIZE);
         if (ret) {
-            printf("Detect Serial using QueryDosDeviceA: ");
+            Log::msg("Detect Serial using QueryDosDeviceA: ");
             for (p = buffer; *p; p += strlen(p) + 1) {
                 //printf(":  %s\n", p);
                 if (strncmp(p, "COM", 3)) continue;
-                printf("\nFound port  %s\n", p);
+                Log::msg("\nFound port  %s\n", p);
                 std::stringstream sstm;
                 sstm << p << ":";
                 list.push_back(sstm.str().c_str());
@@ -437,10 +437,10 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         } else {
             char buf[1024];
             win32_err(buf);
-            printf("QueryDosDeviceA failed, error \"%s\"\n", buf);
-            printf("Detect Serial using brute force GetDefaultCommConfig probing: ");
+            Log::msg("QueryDosDeviceA failed, error \"%s\"\n", buf);
+            Log::msg("Detect Serial using brute force GetDefaultCommConfig probing: ");
             for (int i=1; i<=32; i++) {
-                printf("try  %s", buf);
+                Log::msg("try  %s", buf);
                 COMMCONFIG cfg;
                 DWORD len;
                 snprintf(buf, sizeof(buf), "COM%d", i);
@@ -452,7 +452,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                     list.push_back(sstm.str().c_str());
 
                     //list.Add(name);
-                    printf(":  %s", buf);
+                    Log::msg(":  %s", buf);
                 }
             }
         }
@@ -1304,7 +1304,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
              std::cout<<"checkAllPortsForArduino relaese lock\n";
             #endif
              ArduinoSerial::openPortLock = false;
-             std::cout<<"checkAllPortsForArduino open port lock FALSE\n";
+             //std::cout<<"checkAllPortsForArduino open port lock FALSE\n";
 
     }
 
