@@ -80,7 +80,7 @@
 #endif
 
 
-#define LOG_SCANNING_OF_ARDUINO 1
+#define LOG_SCANNING_OF_ARDUINO 0
 #define BOARD_WITH_EVENT_INPUTS 0
 #define BOARD_WITH_ADDITIONAL_INPUTS 1
 #define BOARD_WITH_HAMMER 4
@@ -581,7 +581,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                         std::transform(nameOfDeviceForTest.begin(), nameOfDeviceForTest.end(), nameOfDeviceForTest.begin(), ::tolower);
                         if (nameOfDeviceForTest.find("bluetooth") != std::string::npos)
                         {
-                            std::cout << "Found Bluetooth device in: "<< nameOfDevice <<" skip it." << '\n';
+                            //std::cout << "Found Bluetooth device in: "<< nameOfDevice <<" skip it." << '\n';
                             Log::msg("Found Bluetooth device in: %s ",nameOfDevice);
                             //eliminate bluetooth device
                             std::list<std::string>::iterator list_it;
@@ -599,7 +599,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                                     std::size_t found=nameOfDevice.find(nameOfPortToCheck);
                                     if (found!=std::string::npos)
                                     {
-                                        std::cout<<"Eliminate port: "<<nameOfDevice<<" \n";
+                                        //std::cout<<"Eliminate port: "<<nameOfDevice<<" \n";
                                         Log::msg("Skip it: %s skip it",nameOfDevice);
                                         list_it = list.erase(list_it);
                                         list_it--;
@@ -608,7 +608,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
 
 
                         }
-                        std::cout<< nameOfDevice<<"\n";
+                        //std::cout<< nameOfDevice<<"\n";
                         delete[] friendlyName;
                     }
                     delete[] hardwareId;
@@ -730,7 +730,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         {
             if (errno == EACCES)
             {
-                std::cout<<"Unable to access "<< portName<< ", insufficient permission";
+                Log::msg("Unable to access "<< portName<< ", insufficient permission";
 
             }
             else if (errno == EISDIR)
@@ -969,7 +969,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
     {
         #ifdef LOG_SCANNING_OF_ARDUINO
         Log::msg("Close serial port: %s", currentPort.portName.c_str());
-        std::cout<<"Close serial port: "<<currentPort.portName.c_str()<<"\n";
+        //std::cout<<"Close serial port: "<<currentPort.portName.c_str()<<"\n";
         #endif
         currentPort.deviceType = ArduinoSerial::unknown;
         currentPort.portName = "";
@@ -1148,7 +1148,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
             }
 
             ArduinoSerial::openPortLock = true;
-            std::cout<<"checkAllPortsForArduino open port lock true\n";
+            //std::cout<<"checkAllPortsForArduino open port lock true\n";
             i = i+1;
             #ifdef LOG_SCANNING_OF_ARDUINO
                 Log::msg("checkAllPortsForArduino After lock");
