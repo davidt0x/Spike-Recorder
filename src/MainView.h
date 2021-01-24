@@ -16,6 +16,8 @@ class AudioView;
 class RecordingBar;
 class AnalysisView;
 class FFTView;
+class ControlServer;
+
 namespace Widgets {
 	class PushButton;
 	class ScrollBar;
@@ -38,6 +40,14 @@ public:
     };
 
 	~MainView();
+
+	void recordPressed();
+	void startRecord();
+	void startRecord(std::string record_path);
+	void stopRecord();
+	void addMarker(std::string marker);
+	void shutdown();
+
 private:
 	RecordingManager &_manager;
 	AnalysisManager &_anaman;
@@ -79,7 +89,11 @@ private:
 	AnalysisView *_anaView;
 	FFTView *_fftView;
 
-	ControlServer _server;
+	ControlServer * _server;
+
+	// Whether to override the default getRecordingPath()
+	bool _recording_path_override;
+	std::string _recording_path;
 
 	void keyPressEvent(Widgets::KeyboardEvent *e);
 
@@ -93,7 +107,6 @@ private:
 	void threshPressed();
 	void filePressed();
 	void configPressed();
-	void recordPressed();
 	void analysisPressed();
 
     void muscleHIDPressed();

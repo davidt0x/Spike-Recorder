@@ -11,7 +11,7 @@ jobs:
         os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
-            triplet: x64-windows
+            triplet: x64-windows-static
           - os: ubuntu-latest
             triplet: x64-linux
           - os: macos-latest
@@ -37,6 +37,7 @@ jobs:
       - name:  Install OS specific dependencies
         run:   |
           if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt update
             sudo apt-get -y install libudev-dev libusb-1.0-0-dev libfox-1.6-dev
             sudo apt-get -y install autotools-dev autoconf automake libtool
           fi
@@ -54,7 +55,7 @@ jobs:
           # The key is composed in a way that it get properly invalidated upon cache and trigger a new entry in the cache service.
           # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
           key: |
-            ${{ hashFiles( 'vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-v4
+            ${{ hashFiles( 'vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-v7
             
       # On Windows runners, let's ensure to have the Developer Command Prompt environment setup correctly. As used here the Developer Command Prompt created is targeting x64 and using the default the Windows SDK.
       - uses: ilammy/msvc-dev-cmd@v1

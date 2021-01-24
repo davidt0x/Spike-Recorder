@@ -28,7 +28,7 @@ float AnalysisManager::calculateRMS(int16_t *data, int length) {
 void AnalysisManager::resetBuffers()
 {
     fft.force();
-    std::cout<<"--------Buffer reset\n";
+    //std::cout<<"--------Buffer reset\n";
 }
 
 }

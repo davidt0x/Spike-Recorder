@@ -18,6 +18,7 @@ find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(cppzmq REQUIRED)
 find_package(BASS REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 # General include directories for the project
 include_directories("src" "src/libraries" "support")
@@ -56,11 +57,12 @@ add_executable(SpikeRecorder ${SOURCES})
 
 target_link_libraries(SpikeRecorder PUBLIC 
 	SDL2::SDL2-static
-	SDL2::SDL2_image 
-	hidapi::hidapi 
+	SDL2::SDL2_image
+	hidapi::hidapi
 	OpenGL::GL 
 	BASS
-	cppzmq
+	cppzmq-static
+	nlohmann_json::nlohmann_json
 	${PLATFORM_LIBS})
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO -DSDL_MAIN_HANDLED)
@@ -75,6 +77,8 @@ if (WIN32)
 	# property. There is probably a better way to do this but this is all I could get to
 	# work.
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	
+	set_property(TARGET SpikeRecorder PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 elseif (APPLE)
 	# Lets bundle it:
   #set_target_properties(SpikeRecorder PROPERTIES

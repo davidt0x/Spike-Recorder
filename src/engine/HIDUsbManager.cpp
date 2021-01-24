@@ -957,8 +957,8 @@ namespace BackyardBrains {
                            ((((writeInteger-512)*62)<-12000) && (lastValue<-12000))))
                         {
                            
-                            printf("%d : %d\n", lastValue,(writeInteger-512)*62);
-                            printf("found");
+                            Log::msg("%d : %d\n", lastValue,(writeInteger-512)*62);
+                            Log::msg("found");
                         }
                         lastValue = (writeInteger-512)*62;
                         if(areWeAtTheEndOfFrame() || obufferIndex>1000)

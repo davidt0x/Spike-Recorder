@@ -61,11 +61,7 @@ RecordingManager::RecordingManager() : _pos(0), _paused(false), _threshMode(fals
     _arduinoSerial.getAllPortsList();
 
     std::list<std::string>::iterator list_it;
-    for(list_it = _arduinoSerial.list.begin(); list_it!= _arduinoSerial.list.end(); list_it++)
-    {
-            std::cout<<list_it->c_str()<<"\n";
-    }
-
+  
     alphaFeedbackActive = false;
     alphaWavePower = 0;
 
@@ -1140,8 +1136,8 @@ int64_t RecordingManager::fileLength() {
 }
 
 void RecordingManager::addMarker(const std::string &id, int64_t offset) {
-    std::cout<<"\n\n Add marker _pos: "<<_pos<<" offset: "<<offset<< "  ";
-	_markers.push_back(std::make_pair(id, _pos + offset));
+    Log::msg("Add marker _pos: %d offset: %d\n", _pos, offset);
+    _markers.push_back(std::make_pair(id, _pos + offset));
 	char tempChar = id.at(0);
     int i_dec = tempChar -48;//std::stoi (id);
 

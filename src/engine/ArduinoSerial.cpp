@@ -80,7 +80,7 @@
 #endif
 
 
-#define LOG_SCANNING_OF_ARDUINO 1
+//#define LOG_SCANNING_OF_ARDUINO 1
 #define BOARD_WITH_EVENT_INPUTS 0
 #define BOARD_WITH_ADDITIONAL_INPUTS 1
 #define BOARD_WITH_HAMMER 4
@@ -425,11 +425,11 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         memset(buffer, 0, QUERYDOSDEVICE_BUFFER_SIZE);
         ret = QueryDosDeviceA(NULL, buffer, QUERYDOSDEVICE_BUFFER_SIZE);
         if (ret) {
-            printf("Detect Serial using QueryDosDeviceA: ");
+            Log::msg("Detect Serial using QueryDosDeviceA: ");
             for (p = buffer; *p; p += strlen(p) + 1) {
                 //printf(":  %s\n", p);
                 if (strncmp(p, "COM", 3)) continue;
-                printf("\nFound port  %s\n", p);
+                Log::msg("\nFound port  %s\n", p);
                 std::stringstream sstm;
                 sstm << p << ":";
                 list.push_back(sstm.str().c_str());
@@ -437,10 +437,10 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         } else {
             char buf[1024];
             win32_err(buf);
-            printf("QueryDosDeviceA failed, error \"%s\"\n", buf);
-            printf("Detect Serial using brute force GetDefaultCommConfig probing: ");
+            Log::msg("QueryDosDeviceA failed, error \"%s\"\n", buf);
+            Log::msg("Detect Serial using brute force GetDefaultCommConfig probing: ");
             for (int i=1; i<=32; i++) {
-                printf("try  %s", buf);
+                Log::msg("try  %s", buf);
                 COMMCONFIG cfg;
                 DWORD len;
                 snprintf(buf, sizeof(buf), "COM%d", i);
@@ -452,7 +452,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                     list.push_back(sstm.str().c_str());
 
                     //list.Add(name);
-                    printf(":  %s", buf);
+                    Log::msg(":  %s", buf);
                 }
             }
         }
@@ -581,7 +581,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                         std::transform(nameOfDeviceForTest.begin(), nameOfDeviceForTest.end(), nameOfDeviceForTest.begin(), ::tolower);
                         if (nameOfDeviceForTest.find("bluetooth") != std::string::npos)
                         {
-                            std::cout << "Found Bluetooth device in: "<< nameOfDevice <<" skip it." << '\n';
+                            //std::cout << "Found Bluetooth device in: "<< nameOfDevice <<" skip it." << '\n';
                             Log::msg("Found Bluetooth device in: %s ",nameOfDevice);
                             //eliminate bluetooth device
                             std::list<std::string>::iterator list_it;
@@ -599,7 +599,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                                     std::size_t found=nameOfDevice.find(nameOfPortToCheck);
                                     if (found!=std::string::npos)
                                     {
-                                        std::cout<<"Eliminate port: "<<nameOfDevice<<" \n";
+                                        //std::cout<<"Eliminate port: "<<nameOfDevice<<" \n";
                                         Log::msg("Skip it: %s skip it",nameOfDevice);
                                         list_it = list.erase(list_it);
                                         list_it--;
@@ -608,7 +608,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
 
 
                         }
-                        std::cout<< nameOfDevice<<"\n";
+                        //std::cout<< nameOfDevice<<"\n";
                         delete[] friendlyName;
                     }
                     delete[] hardwareId;
@@ -730,7 +730,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         {
             if (errno == EACCES)
             {
-                std::cout<<"Unable to access "<< portName<< ", insufficient permission";
+                Log::msg("Unable to access "<< portName<< ", insufficient permission";
 
             }
             else if (errno == EISDIR)
@@ -862,7 +862,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         snprintf(buf, sizeof(buf), "%s", _portName.c_str());
         p = strstr(buf, "COM");
         if (p && sscanf(p + 3, "%d", &port_num) == 1) {
-            printf("port_num = %d\n", port_num);
+            Log::msg("port_num = %d\n", port_num);
             snprintf(name_createfile, sizeof(name_createfile), "\\\\.\\COM%d", port_num);
             snprintf(name_commconfig, sizeof(name_commconfig), "COM%d", port_num);
         } else {
@@ -969,7 +969,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
     {
         #ifdef LOG_SCANNING_OF_ARDUINO
         Log::msg("Close serial port: %s", currentPort.portName.c_str());
-        std::cout<<"Close serial port: "<<currentPort.portName.c_str()<<"\n";
+        //std::cout<<"Close serial port: "<<currentPort.portName.c_str()<<"\n";
         #endif
         currentPort.deviceType = ArduinoSerial::unknown;
         currentPort.portName = "";
@@ -1148,7 +1148,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
             }
 
             ArduinoSerial::openPortLock = true;
-            std::cout<<"checkAllPortsForArduino open port lock true\n";
+            //std::cout<<"checkAllPortsForArduino open port lock true\n";
             i = i+1;
             #ifdef LOG_SCANNING_OF_ARDUINO
                 Log::msg("checkAllPortsForArduino After lock");
@@ -1304,7 +1304,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
              std::cout<<"checkAllPortsForArduino relaese lock\n";
             #endif
              ArduinoSerial::openPortLock = false;
-             std::cout<<"checkAllPortsForArduino open port lock FALSE\n";
+             //std::cout<<"checkAllPortsForArduino open port lock FALSE\n";
 
     }
 
@@ -1456,7 +1456,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
 
         if (st.cbInQue <= 0)
         {
-             printf("Read -- %lu\n",st.cbInQue);
+             Log::msg("Read -- %lu\n",st.cbInQue);
              batchSizeForSerial -=15;
              if(batchSizeForSerial<100)
              {
@@ -1506,16 +1506,16 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         } else {
             if (GetLastError() == ERROR_IO_PENDING) {
                 if (GetOverlappedResult(port_handle, &ov, &num_read, TRUE)) {
-                    printf("Read, delayed, num_read=%lu\n", num_read);
+                    Log::msg("Read, delayed, num_read=%lu\n", num_read);
                     //std::cout<<" -----------------" <<num_request<<" -- " <<num_request-num_read<<"\n";
                     size = num_read;
                 } else {
-                    printf("Read, delayed error\n");
+                    Log::msg("Read, delayed error\n");
                     //std::cout<<" Read, delayed error------------------\n";
                     size = -1;
                 }
             } else {
-                printf("Read, error\n");
+                Log::msg("Read, error\n");
                 //std::cout<<"Read, error~~~~~~~~~~~~~~~~~~~~\n";
                 size = -1;
             }
