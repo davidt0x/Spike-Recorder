@@ -81,11 +81,11 @@ if (WIN32)
 	set_property(TARGET SpikeRecorder PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 elseif (APPLE)
 	# Lets bundle it:
-	set_target_properties(SpikeRecorder PROPERTIES
-	  MACOSX_BUNDLE TRUE
-	  MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/macosx-Info.plist
-	  XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS ${CMAKE_CURRENT_SOURCE_DIR}/SpikeRecorder.entitlements
-	)
+  #set_target_properties(SpikeRecorder PROPERTIES
+  #  MACOSX_BUNDLE TRUE
+  #  MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/macosx-Info.plist
+  #  XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS ${CMAKE_CURRENT_SOURCE_DIR}/SpikeRecorder.entitlements
+  #)
 endif ()
 
 # We need to copy data/ to the build directory too

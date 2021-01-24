@@ -106,7 +106,7 @@ namespace BackyardBrains {
                     main_view->stopRecord();
                 }
                 else {
-                    Log::error("ControlServer: Inavlid Command Message Type: %s", type);
+                    Log::error("ControlServer: Inavlid Command Message Type: %s", type.c_str());
                     reply_error("ControlServer: Inavlid Command Message Type");
                 }
               

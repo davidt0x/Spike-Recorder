@@ -41,7 +41,7 @@
     #include <unistd.h>
     #include <sys/ioctl.h>
     #include <errno.h>
-    #include <paths.h>
+    #include <Paths.h>
     #include "native/SerialPortsScan.h"
     #include <termios.h>
     #include <sysexits.h>
