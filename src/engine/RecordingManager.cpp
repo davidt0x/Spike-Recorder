@@ -2422,8 +2422,13 @@ bool RecordingManager::Device::enable(int64_t pos) {
 			return false;
 		}
 
+    // Try to enable device recording with 2 channels, if that fails, go for one.
+    // It seems like on Windows 2-channels works with the mics but on Mac only 
+    // one works.
 		handle = BASS_RecordStart(samplerate, 2, 0, NULL, NULL);
-		//handle = FALSE;
+    if(handle == FALSE)
+      handle = BASS_RecordStart(samplerate, 1, 0, NULL, NULL);
+
 		if (handle == FALSE) {
 			Log::error("Bass Error: starting the recording failed: %s", GetBassStrError());
 			printf("\nBass Error: starting the recording failed: %s\n", GetBassStrError());
