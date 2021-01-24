@@ -193,7 +193,13 @@ std::string FileRecorder::eventTxtFilename(const std::string &filename) {
 
 int FileRecorder::writeMarkerTextFile(const std::string &filename, const std::list<std::pair<std::string, int64_t> > &markers) const {
 #ifdef __APPLE__
-    size_t lastSlash =  filename.find_last_of("/");
+	/* 
+	* Not sure why on Mac's we need to restrict saving the marker file
+	* to only the Spike Recorder directory. Anyway, I will disable this
+	* for now since the Python client allows passing in arbitrary paths.
+    * I have commented this section out for now.
+
+	size_t lastSlash =  filename.find_last_of("/");
     if(lastSlash == std::string::npos || lastSlash==0 )
     {
         Log::warn("Could not create marker file: %s", strerror(errno));
@@ -214,6 +220,7 @@ int FileRecorder::writeMarkerTextFile(const std::string &filename, const std::li
         Log::warn("Could not create marker file: %s", strerror(errno));
         return 1;
     }
+	*/
     FILE *f = fopen(filename.c_str(),"w+");
 #else
     FILE *f = fopen(filename.c_str(),"w+");
