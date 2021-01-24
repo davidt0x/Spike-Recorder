@@ -18,6 +18,7 @@ find_package(sdl2-image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(cppzmq REQUIRED)
 find_package(BASS REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 # General include directories for the project
 include_directories("src" "src/libraries" "support")
@@ -61,6 +62,7 @@ target_link_libraries(SpikeRecorder PUBLIC
 	OpenGL::GL 
 	BASS
 	cppzmq-static
+	nlohmann_json::nlohmann_json
 	${PLATFORM_LIBS})
 
 target_compile_definitions(SpikeRecorder PUBLIC -DSIGSLOT_PURE_ISO -DSDL_MAIN_HANDLED)

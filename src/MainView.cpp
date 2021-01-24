@@ -36,7 +36,7 @@
 namespace BackyardBrains {
 
 
-MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder &fileRec, Widget *parent) : Widget(parent), _manager(mngr), _anaman(anaman), _fileRec(fileRec), _anaView(NULL), _server() {
+MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder &fileRec, Widget *parent) : Widget(parent), _manager(mngr), _anaman(anaman), _fileRec(fileRec), _anaView(NULL) {
 	_audioView = new AudioView(this, _manager, _anaman);
 
 	    //setup timer that will periodicaly check for USB HID devices
@@ -210,7 +210,15 @@ MainView::MainView(RecordingManager &mngr, AnalysisManager &anaman, FileRecorder
 	_audioView->standardSettings();
 
     // Start the command server listening
-    _server.start();
+    _server = new ControlServer();
+    _server->start();
+
+    // Set the default recording path override to "". This will
+    // cause the app to use getRecordingPath() as usual
+    // The is the Python side sends a command this will be changed
+    // to override the default behaviour.
+    _recording_path_override = false;
+    _recording_path = "";
 
 }
 
@@ -218,7 +226,8 @@ MainView::~MainView() {
 	delete _anaView;
 
     // Shutdown the server
-    _server.stop();
+    _server->stop();
+    delete _server;
 }
 
 void MainView::triggerEvent()
@@ -326,7 +335,20 @@ void MainView::recordPressed() {
 		char buf[64];
 		time_t t = time(NULL);
 		strftime(buf, sizeof(buf), "%Y-%m-%d_%H.%M.%S.wav", localtime(&t));
-		std::string filename = getRecordingPath()+"/BYB_Recording_"+buf;
+		
+        std::string filename;
+        if (_recording_path_override)
+        {
+            // If the path ends in .wav, save directly to the wave file name, no need to generate a unique name with time.
+            // Otherwise, assume its a directory.
+            std::string suffix = ".wav";
+            if (_recording_path.size() >= suffix.size() && _recording_path.compare(_recording_path.size() - suffix.size(), suffix.size(), suffix) == 0)
+                filename = _recording_path;
+            else
+                filename = _recording_path + +"/BYB_Recording_" + buf;
+        } else {
+            filename = getRecordingPath() + "/BYB_Recording_" + buf;
+        }
         Log::msg("Record in file: %s",filename.c_str());
 		if(!_fileRec.start(filename.c_str())) {
 			const char *error = strerror(errno);
@@ -1745,39 +1767,55 @@ void MainView::keyPressEvent(Widgets::KeyboardEvent *e) {
 
 }
 
+void MainView::startRecord()
+{
+    if (!_fileRec.recording()) {
+        _recording_path_override = false;
+        _recording_path = "";
+        recordPressed();
+    }
+
+}
+
+
+void MainView::startRecord(std::string record_path)
+{
+    if (!_fileRec.recording())
+    {
+        _recording_path_override = true;
+        _recording_path = record_path;
+        recordPressed();
+    }
+}
+
+void MainView::stopRecord()
+{
+    if (_fileRec.recording())
+    {
+        _recording_path_override = true;
+        _recording_path = "";
+        recordPressed();
+    }
+}
+
+void MainView::addMarker(std::string marker)
+{
+    _manager.addMarker(marker, _audioView->offset());
+}
+
+void MainView::shutdown()
+{
+    // Push a quit event, the Application class handles this event to cause shutdown
+    SDL_Event sdlevent;
+    sdlevent.type = SDL_QUIT;
+    SDL_PushEvent(&sdlevent);
+}
+
 
 void MainView::advance()
-
 {
-
-    // Check if we have any command messages from a client
-    std::string command = _server.getMessage();
-
-    if (command == "start")
-    {
-        if (!_fileRec.recording())
-            recordPressed();
-
-    }
-    else if (command == "stop") {
-        
-        if (_fileRec.recording())
-            recordPressed();
-    
-    }
-    else if (command == "shutdown") {
-        
-        // Push a quit event, the Application class handles this event to cause shutdown
-        SDL_Event sdlevent;
-        sdlevent.type = SDL_QUIT;
-        SDL_PushEvent(&sdlevent);
-
-    }
-    else if (command != "")
-    {
-        _manager.addMarker(command, _audioView->offset());
-    }
-
+    // Check if we have any command messages from a client and process them
+    _server->processMessage(this);
 }
 
 }

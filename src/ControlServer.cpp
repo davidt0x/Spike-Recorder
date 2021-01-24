@@ -1,7 +1,13 @@
 #include <string>
 
 #include "ControlServer.h"
+#include "MainView.h"
 #include "Log.h"
+
+#include <nlohmann/json.hpp>
+
+// for convenience
+using json = nlohmann::json;
 
 namespace BackyardBrains {
     
@@ -30,7 +36,39 @@ namespace BackyardBrains {
 
     }
 
-    std::string ControlServer::getMessage()
+    void ControlServer::reply_ok()
+    {
+        //  Send success reply back to client
+        auto reply_ok = R"(
+                {
+                    "type": "REPLY_OK"
+                }
+                )"_json;
+        auto length = std::snprintf(nullptr, 0, "%s", reply_ok.dump().c_str()) + 1;
+        // +1 to account for null terminating character.
+
+        zmq::message_t message(length);
+        std::snprintf(static_cast<char*>(message.data()), length, "%s", reply_ok.dump().c_str());
+        socket.send(message, zmq::send_flags::none);
+    }
+
+    void ControlServer::reply_error(std::string error)
+    {
+        //  Send success reply back to client
+        auto reply_ok = R"(
+                {
+                    "type": "REPLY_ERROR"
+                }
+                )"_json;
+        auto length = std::snprintf(nullptr, 0, "%s", reply_ok.dump().c_str()) + 1;
+        // +1 to account for null terminating character.
+
+        zmq::message_t message(length);
+        std::snprintf(static_cast<char*>(message.data()), length, "%s", reply_ok.dump().c_str());
+        socket.send(message, zmq::send_flags::none);
+    }
+
+    void ControlServer::processMessage(BackyardBrains::MainView * main_view)
     {
 
         zmq::message_t request;
@@ -44,16 +82,51 @@ namespace BackyardBrains {
             std::string message = request.to_string();
             BackyardBrains::Log::msg("ControlSever: Message Received %s", message.c_str());
 
-            //  Send reply back to client
-            zmq::message_t reply(3);
-            memcpy((void*)reply.data(), "OK!", 3);
-            socket.send(reply);
+            // Parse the json message
+            try {
+                auto j = json::parse(message);
+                auto type = j["type"].get<std::string>();
+                auto args = j["args"];
 
-            return message;
+                // Figure out what to do
+                if (type == "SHUTDOWN")
+                {
+                    main_view->shutdown();
+                }
+                else if (type == "PUSH_EVENT_MARKER") {
+                    main_view->addMarker(args["name"].get<std::string>());
+                }
+                else if (type == "START_RECORD") {
+                    if(args.contains("filename") && args["filename"].get<std::string>() != "")
+                        main_view->startRecord(args["filename"].get<std::string>());
+                    else
+                        main_view->startRecord();
+                }
+                else if (type == "STOP_RECORD") {
+                    main_view->stopRecord();
+                }
+                else {
+                    Log::error("ControlServer: Inavlid Command Message Type: %s", type);
+                    reply_error("ControlServer: Inavlid Command Message Type");
+                }
+              
+
+                // Seems to be ok, reply ok              
+                reply_ok();
+              
+            }
+            catch (json::exception& e)
+            {
+                // output exception information
+                Log::error("ControlServer: Message JSON Parse Error\n\tmessage: %s", e.what());
+                
+                // Error, reply with error to client side
+                reply_error(std::string(e.what()));
+
+            }
+ 
         }
 
-        return "";
- 
     }
 
 }
