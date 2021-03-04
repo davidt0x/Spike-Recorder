@@ -835,7 +835,7 @@ void RecordingManager::initRecordingDevices() {
 			_virtualDevices.push_back(virtualDevice);
 		}
 	}
-	if(i > 0) {
+	if(_virtualDevices.size() > 0) {
 		bindVirtualDevice(0);
 	}
 
