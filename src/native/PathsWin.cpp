@@ -36,13 +36,10 @@ std::string getLoggingPath() {
 }
 
 std::string getConfigPath() {
-
+    
     std::stringstream ss;
-    ss<<getenv("APPDATA");
-    ss <<"\\BackyardBrains\\SpikeRecorder\\config.xml";
-    //std::string s = ss.str();
+    ss << ExePath() << "\\config.xml";
     return ss.str().c_str();
-	//return "%APPDATA%\\BackyardBrains\\SpikeRecorder\\byb.log";
 }
 
 
