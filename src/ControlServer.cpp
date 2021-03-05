@@ -55,16 +55,16 @@ namespace BackyardBrains {
     void ControlServer::reply_error(std::string error)
     {
         //  Send success reply back to client
-        auto reply_ok = R"(
+        auto reply_error = R"(
                 {
                     "type": "REPLY_ERROR"
                 }
                 )"_json;
-        auto length = std::snprintf(nullptr, 0, "%s", reply_ok.dump().c_str()) + 1;
+        auto length = std::snprintf(nullptr, 0, "%s", reply_error.dump().c_str()) + 1;
         // +1 to account for null terminating character.
 
         zmq::message_t message(length);
-        std::snprintf(static_cast<char*>(message.data()), length, "%s", reply_ok.dump().c_str());
+        std::snprintf(static_cast<char*>(message.data()), length, "%s", reply_error.dump().c_str());
         socket.send(message, zmq::send_flags::none);
     }
 
