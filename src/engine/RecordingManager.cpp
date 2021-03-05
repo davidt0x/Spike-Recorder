@@ -564,7 +564,9 @@ bool RecordingManager::initSerial(const char *portName)
     DWORD frequency = _arduinoSerial.getSampleRate();//_arduinoSerial.maxSamplingRate()/_numOfSerialChannels;
     _sampleRate = _arduinoSerial.getSampleRate();
     _numOfSerialChannels = _arduinoSerial.numberOfChannels();
-    std::cout<<"Frequency: "<<frequency<<" Chan: "<<_numOfSerialChannels<<" Samp: "<<_arduinoSerial.maxSamplingRate()<<"\n";
+    //std::cout<<"Frequency: "<<frequency<<" Chan: "<<_numOfSerialChannels<<" Samp: "<<_arduinoSerial.maxSamplingRate()<<"\n";
+    Log::msg("HID Frequency: %d Chan: %d Samp: %d", frequency, _numOfSerialChannels, _arduinoSerial.maxSamplingRate());
+
     HSTREAM stream = BASS_StreamCreate(frequency, _numOfSerialChannels, BASS_STREAM_DECODE, STREAMPROC_PUSH, NULL);
     if(stream == 0) {
         std::cerr << "Bass Error: Failed to open serial stream. \n";
@@ -835,7 +837,7 @@ void RecordingManager::initRecordingDevices() {
 			_virtualDevices.push_back(virtualDevice);
 		}
 	}
-	if(i > 0) {
+	if(_virtualDevices.size() > 0) {
 		bindVirtualDevice(0);
 	}
 

@@ -53,9 +53,17 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp)
 namespace BackyardBrains {
 
 Log *Log::_log = 0;
-Log::Log() {
-    //std::string test  = getConfigPath();
-	if(getLoggingPath() == "") {
+
+Log::Log(const char * log_file_path) : _log_file_path(log_file_path) {
+
+	if (_log_file_path != NULL) {
+		fprintf(stderr, "Log file: %s\n", _log_file_path);
+		_out = fopen(_log_file_path, "w");
+		if (_out == 0) {
+			fprintf(stderr, "Error opening logging destination:%s\nRedirecting log to stdout.\n", strerror(errno));
+			_out = stdout;
+		}
+	} else if (getLoggingPath() == "") {
 		_out = stdout;
 	} else {
 	    fprintf(stderr,"Log file: %s\n", getLoggingPath().c_str());
@@ -67,10 +75,17 @@ Log::Log() {
 	}
 }
 
+
 void Log::init() {
 	if(_log == 0)
-		_log = new Log();
+		_log = new Log(NULL);
 }
+
+void Log::init(const char* log_file_path) {
+	if (_log == 0)
+		_log = new Log(log_file_path);
+}
+
 
 void Log::msg(const char *fmt, ...) {
 	init();

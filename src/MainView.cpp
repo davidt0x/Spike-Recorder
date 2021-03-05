@@ -525,7 +525,7 @@ void MainView::analysisPressed() {
     void MainView::connectToShieldForButton(Widgets::PushButton* buttonInst)
     {
         std::list<SerialPortIndicator> ::iterator buttonsIterator;
-        std::cout<<"\n connectToShieldForButton\n";
+        Log::msg("\n connectToShieldForButton\n");
 
         //find port name
         bool foundButton = false;
@@ -587,7 +587,7 @@ void MainView::analysisPressed() {
         if(_manager.serialMode())
         {
 
-                std::cout<<"disconnect on Button click (connectToShieldForButton)\n";
+                Log::msg("disconnect on Button click (connectToShieldForButton)\n");
 
                 std::size_t found;
                 found  = _manager.getCurrentPort().portName.find(selectedPort.portName);
@@ -639,7 +639,7 @@ void MainView::analysisPressed() {
         std::list<ArduinoSerial::SerialPort> sps =  _manager.serailPorts();
         std::list<ArduinoSerial::SerialPort>::iterator it;
         int portIndex = 0;
-        std::cout<<"\n connectToFirstShieldOfType\n";
+        Log::msg("\n connectToFirstShieldOfType\n");
         if(_manager.hidMode())
         {
             _manager.disconnectFromHID();
@@ -654,7 +654,7 @@ void MainView::analysisPressed() {
         {
             if(_manager.getCurrentPort().deviceType == deviceType)
             {
-                std::cout<<"1 disconnect \n";
+                Log::msg("1 disconnect \n");
                 //if we are connected to serial and device type is the same as this one
                 //just disconnect!
                 _manager.setSerialNumberOfChannels(1);
@@ -686,7 +686,7 @@ void MainView::analysisPressed() {
                     //if we just want to turn off current shield
                     if(_manager.serialMode())
                     {
-                        std::cout<<"2 disconnect \n";
+                        Log::msg("2 disconnect \n");
                         _manager.setSerialNumberOfChannels(1);
                         _manager.disconnectFromSerial();
                     }
@@ -695,7 +695,7 @@ void MainView::analysisPressed() {
                 //if we want to turn on some different shield
                 if(_manager.serialMode())
                 {
-                    std::cout<<"3 disconnect \n";
+                    Log::msg("3 disconnect \n");
                     _manager.setSerialNumberOfChannels(1);
                     _manager.disconnectFromSerial();
                 }
