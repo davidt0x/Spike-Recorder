@@ -22,7 +22,7 @@ std::string getRecordingPath() {
 }
 
 std::string getLoggingPath() {
-	return "byb.log";
+	return "";
 }
 
 }
