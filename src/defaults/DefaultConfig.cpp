@@ -21,7 +21,7 @@ namespace BackyardBrains
            XMLError eResult = xmlDoc.LoadFile(getConfigPath().c_str());
            if (eResult != XML_SUCCESS)
            {
-               printf("Config not found %i\n", eResult);
+               Log::msg("Config not found %i\n", eResult);
                saveDefaults();
                return 1;
            }
