@@ -997,9 +997,9 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         else{
             try
             {
-                std::cout<<"Before win close \n";
+                Log::msg("Before win close \n");
                 CloseHandle(port_handle);
-                std::cout<<"After win close \n";
+                Log::msg("After win close \n");
             }
             catch(...)
             {
