@@ -730,27 +730,23 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         {
             if (errno == EACCES)
             {
-                Log::msg("Unable to access "<< portName<< ", insufficient permission";
-
+                Log::msg("Unable to access %s insufficient permission", portName);
             }
             else if (errno == EISDIR)
             {
-                std::cout<< "Unable to open " << portName <<
-                ", Object is a directory, not a serial port";
+                Log::msg("Unable to open %s, Object is a directory, not a serial port", portName);
             }
             else if (errno == ENODEV || errno == ENXIO)
             {
-                std::cout<< "Unable to open " << portName <<
-                ", Serial port hardware not installed";
+                Log::msg("Unable to open %s, Serial port hardware not installed", portName);
             }
             else if (errno == ENOENT)
             {
-                std::cout<< "Unable to open " << portName <<
-                ", Device name does not exist";
+                Log::msg("Unable to open %s, Device name does not exist", portName);
             }
             else
             {
-                std::cout<< "Unable to open " << portName; //<<
+                Log::msg("Unable to open %s", portName);
 
             }
             return -1;
@@ -758,7 +754,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         if (ioctl(portDescriptor, TIOCMGET, &bits) < 0)
         {
             close(portDescriptor);
-            std::cout<< "Unable to query serial port signals";
+            Log::msg("Unable to query serial port signals");
             return -1;
         }
        // bits &= ~(TIOCM_DTR | TIOCM_RTS);
@@ -766,13 +762,13 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
         if (ioctl(portDescriptor, TIOCMSET, &bits) < 0)
         {
             close(portDescriptor);
-            std::cout<< "Unable to control serial port signals";
+            Log::msg("Unable to control serial port signals");
             return -1;
         }
         if (tcgetattr(portDescriptor, &settings_orig) != 0)
         {
             close(portDescriptor);
-            std::cout<< "Unable to query serial port settings (perhaps not a serial port)";
+            Log::msg("Unable to query serial port settings (perhaps not a serial port)");
             return -1;
         }
         /*memset(&settings, 0, sizeof(settings));
