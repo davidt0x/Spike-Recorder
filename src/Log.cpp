@@ -103,18 +103,7 @@ void Log::msg(const char *fmt, ...) {
 	format += "\n";
 	va_list args;
 	va_start(args,fmt);
-#ifdef __APPLE__
-  char buffer[512];
-  vsprintf (buffer,fmt, args);
-  //perror (buffer);
-  syslog(LOG_ERR, "%s", buffer);
-  vfprintf(_log->_out, format.c_str(), args);
-#else
 	vfprintf(_log->_out, format.c_str(), args);
-#endif
-
-
-
 	va_end(args);
 }
 
@@ -126,15 +115,7 @@ void Log::warn(const char *fmt, ...) {
 	format += "\n";
 	va_list args;
 	va_start(args,fmt);
-
-    #ifdef __APPLE__
-        char buffer[512];
-        vsprintf (buffer,fmt, args);
-        syslog(LOG_WARNING, "%s", buffer);
-        vfprintf(_log->_out, format.c_str(), args);
-    #else
-        vfprintf(_log->_out, format.c_str(), args);
-    #endif
+  vfprintf(_log->_out, format.c_str(), args);
 	va_end(args);
 }
 
@@ -146,14 +127,7 @@ void Log::error(const char *fmt, ...) {
 	format += "\n";
 	va_list args;
 	va_start(args,fmt);
-#ifdef __APPLE__
-    char buffer[512];
-    vsprintf (buffer,fmt, args);
-    syslog(LOG_ERR, "%s", buffer);
-    vfprintf(_log->_out, format.c_str(), args);
-#else
-    vfprintf(_log->_out, format.c_str(), args);
-#endif
+  vfprintf(_log->_out, format.c_str(), args);
 	va_end(args);
 }
 
@@ -165,14 +139,7 @@ void Log::fatal(const char *fmt, ...) {
 	format += "\n";
 	va_list args;
 	va_start(args,fmt);
-#ifdef __APPLE__
-    char buffer[512];
-    vsprintf (buffer,fmt, args);
-    syslog(LOG_CRIT, "%s", buffer);
-    vfprintf(_log->_out, format.c_str(), args);
-#else
-    vfprintf(_log->_out, format.c_str(), args);
-#endif
+  vfprintf(_log->_out, format.c_str(), args);
 	va_end(args);
 
 	abort();
