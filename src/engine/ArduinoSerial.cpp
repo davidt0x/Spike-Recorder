@@ -1271,7 +1271,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                 else
                 {
                     #ifdef LOG_SCANNING_OF_ARDUINO
-                    std::cout<<"\nPort: "<<list_it->portName.c_str()<<" Failed!\n";
+                    Log::msg("\nPort: %s Failed!\n", list_it->portName.c_str());
                     #endif
                     closeSerial();
                 }
@@ -1615,7 +1615,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                             //we have begining of the frame inside frame
                             //something is wrong
                             numberOfFrames--;
-                            std::cout<< "Incomplete frame 1 \n";
+                            Log::msg("Incomplete frame 1 \n");
                             break;//continue as if we have new frame
                         }
                         MSB  = ((uint)(circularBuffer[cBufTail])) & 0x7F;
@@ -1631,7 +1631,7 @@ void ArduinoSerial::scanPortsThreadFunction(ArduinoSerial * selfRef, ArduinoSeri
                         if(LSB>127)
                         {
                             numberOfFrames--;
-                            std::cout<< "Incomplete frame 2 \n";
+                            Log::msg("Incomplete frame 2 \n");
                             break;//continue as if we have new frame
                         }
                         // std::cout<< cBufTail<<" -L "<<LSB<<"\n";
